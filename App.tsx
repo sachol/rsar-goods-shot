@@ -28,7 +28,8 @@ import {
   Settings,
   MonitorCheck,
   Zap,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
 import { WorkMode, PlacementType, BackgroundType, AISuggestion, GenerationHistory, AnalysisResult } from './types.ts';
 import { analyzeProductImage, generateStudioShot, validateApiKey } from './services/geminiService.ts';
@@ -330,7 +331,7 @@ export default function App() {
         </div>
       )}
 
-      {/* API 설정 (기존 기능 유지) */}
+      {/* API 설정 */}
       {isApiSettingsOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
           <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95">
@@ -373,9 +374,30 @@ export default function App() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setIsHowToOpen(true)} className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-black text-sm border border-indigo-100 dark:border-indigo-800 active:scale-95 transition-all"><Info className="w-4 h-4" /> 가이드</button>
-          <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all">{isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}</button>
-          <button onClick={() => setIsApiSettingsOpen(true)} className="p-3.5 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg active:scale-95"><Key className="w-5 h-5" /></button>
+          {/* 가이드 버튼: 아이콘 전용 스타일로 변경 */}
+          <button 
+            onClick={() => setIsHowToOpen(true)} 
+            className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 transition-all active:scale-95 hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
+            title="이용 가이드"
+          >
+            <BookOpen className="w-5 h-5" />
+          </button>
+          
+          <button 
+            onClick={() => setIsDarkMode(!isDarkMode)} 
+            className="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all active:scale-95 hover:bg-slate-200 dark:hover:bg-slate-700"
+            title="다크 모드 전환"
+          >
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          
+          <button 
+            onClick={() => setIsApiSettingsOpen(true)} 
+            className="p-3.5 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
+            title="API 설정"
+          >
+            <Key className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
