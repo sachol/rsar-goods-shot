@@ -24,7 +24,11 @@ import {
   Building2, 
   UserCheck, 
   Home, 
-  Trees 
+  Trees,
+  Settings,
+  MonitorCheck,
+  Zap,
+  ExternalLink
 } from 'lucide-react';
 import { WorkMode, PlacementType, BackgroundType, AISuggestion, GenerationHistory, AnalysisResult } from './types.ts';
 import { analyzeProductImage, generateStudioShot, validateApiKey } from './services/geminiService.ts';
@@ -248,34 +252,85 @@ export default function App() {
         </div>
       )}
 
-      {/* 가이드 모달 */}
+      {/* 개선된 가이드 모달 */}
       {isHowToOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95">
-            <div className="p-8 bg-indigo-600 text-white flex justify-between items-center">
-              <h2 className="text-xl font-black flex items-center gap-2"><Info className="w-6 h-6" /> 이용 가이드</h2>
-              <button onClick={() => setIsHowToOpen(false)}><X className="w-6 h-6" /></button>
+          <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 flex flex-col max-h-[90vh]">
+            <div className="p-8 bg-gradient-to-r from-indigo-600 to-violet-700 text-white shrink-0 relative overflow-hidden">
+               <div className="absolute -right-10 -bottom-10 opacity-20"><Sparkles className="w-40 h-40" /></div>
+              <div className="flex justify-between items-center relative z-10">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md"><MonitorCheck className="w-6 h-6" /></div>
+                  <h2 className="text-2xl font-black tracking-tight">서비스 이용 가이드</h2>
+                </div>
+                <button onClick={() => setIsHowToOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors"><X className="w-6 h-6" /></button>
+              </div>
+              <p className="mt-4 text-indigo-100 text-sm font-bold max-w-md leading-relaxed">
+                RSA Goods Shot AI STUDIO는 당신의 상품 사진을 단 몇 초 만에 프리미엄 광고 화보로 변신시키는 최첨단 AI 디자인 워크플로우 도구입니다.
+              </p>
             </div>
-            <div className="p-10 space-y-6">
-              <div className="p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border-l-4 border-indigo-500">
-                <h3 className="font-black text-indigo-500 mb-1">1. 이미지 업로드</h3>
-                <p className="text-sm font-bold opacity-70">상품 이미지를 업로드하세요. 배경이 단순할수록 좋습니다.</p>
-              </div>
-              <div className="p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border-l-4 border-indigo-500">
-                <h3 className="font-black text-indigo-500 mb-1">2. 연출 및 서브 옵션</h3>
-                <p className="text-sm font-bold opacity-70">배경합성(실내/실외) 또는 모델/장소(인물/건물)를 상세히 선택하세요.</p>
-              </div>
-              <div className="p-5 bg-slate-50 dark:bg-slate-800 rounded-2xl border-l-4 border-indigo-500">
-                <h3 className="font-black text-indigo-500 mb-1">3. AI 분석 및 생성</h3>
-                <p className="text-sm font-bold opacity-70">AI의 5가지 제안 중 하나를 골라 고화질 화보를 완성합니다.</p>
-              </div>
-              <button onClick={() => setIsHowToOpen(false)} className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black shadow-lg">이해했습니다</button>
+
+            <div className="flex-1 overflow-y-auto p-8 space-y-10 no-scrollbar bg-slate-50/50 dark:bg-slate-900/50">
+              {/* 필수 사전 작업: API 설정 */}
+              <section className="space-y-4">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                  <Key className="w-5 h-5" />
+                  <h3 className="font-black text-lg">0. 시작 전: API 설정 (필수)</h3>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                  <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed">
+                    이 서비스는 Google의 최신 Gemini AI 모델을 사용합니다. 서비스를 이용하려면 개인용 **API Key**가 반드시 필요합니다.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 shrink-0 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 rounded-full flex items-center justify-center text-xs font-black">1</div>
+                      <p className="text-xs font-bold opacity-80 leading-relaxed">상단 우측의 <Key className="w-3 h-3 inline" /> 아이콘을 눌러 설정창을 엽니다.</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 shrink-0 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 rounded-full flex items-center justify-center text-xs font-black">2</div>
+                      <p className="text-xs font-bold opacity-80 leading-relaxed">API 키를 입력 후 <RefreshCw className="w-3 h-3 inline" /> <b>실시간 검증</b> 버튼을 눌러 상태를 확인하세요.</p>
+                    </div>
+                  </div>
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs font-black text-indigo-500 hover:underline">
+                    Google AI Studio에서 무료 API 키 발급받기 <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </section>
+
+              {/* 단계별 워크플로우 */}
+              <section className="space-y-6">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                  <Zap className="w-5 h-5" />
+                  <h3 className="font-black text-lg">핵심 이용 단계</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-4">
+                  {[
+                    { icon: Upload, title: "1. 상품 이미지 업로드", desc: "배경이 단순하거나 누끼가 제거된 상품 이미지를 업로드하세요. AI가 실시간으로 형태를 분석합니다." },
+                    { icon: Settings, title: "2. 연출 컨셉 및 상세 옵션", desc: "배경 합성(실내/실외) 또는 모델 착용(인물/장소) 중 원하는 화보 성격을 결정합니다." },
+                    { icon: Sparkles, title: "3. AI 스타일 제안 및 툴팁 확인", desc: "분석된 5가지 시나리오에 마우스를 올려(Tooltip) 상세한 연출 내용을 미리 읽어보세요." },
+                    { icon: MonitorCheck, title: "4. 프리미엄 렌더링 및 저장", desc: "선택한 스타일로 고화질 이미지를 생성합니다. 결과물은 히스토리에 자동 저장되어 언제든 다시 받을 수 있습니다." },
+                  ].map((step, idx) => (
+                    <div key={idx} className="flex gap-5 p-5 bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors">
+                      <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl h-fit shadow-inner"><step.icon className="w-6 h-6 text-indigo-500" /></div>
+                      <div>
+                        <h4 className="font-black text-sm mb-1 text-slate-800 dark:text-white">{step.title}</h4>
+                        <p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <div className="p-8 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
+              <button onClick={() => setIsHowToOpen(false)} className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[1.5rem] font-black shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">스튜디오 시작하기</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* API 설정 */}
+      {/* API 설정 (기존 기능 유지) */}
       {isApiSettingsOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
           <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95">
