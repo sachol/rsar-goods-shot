@@ -1,0 +1,7 @@
+{
+  "name": "3Copy of 상품 샷 AI 스튜디오 (Product Shot AI Studio)",
+  "description": "사용자가 업로드한 상품 이미지를 AI가 분석하여, 최적의 배경 합성이나 모델 착용 컷을 자동으로 생성해주는 전문 디자인 도구입니다.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
